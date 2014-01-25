@@ -3,6 +3,7 @@ using AForge.Imaging;
 using AForge.Math.Geometry;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,9 @@ namespace DSVision
 {
     class Program
     {
+        //0,15	43,15	47.5,13	50,8.5
+        //0,0	43,0	47.5,2	50,6.5
+
         static void Main(string[] args)
         {
             Bitmap bmp = new Bitmap("Test.png");
@@ -20,24 +24,29 @@ namespace DSVision
             blobCounter.ProcessImage(bmp);
             Blob[] blobs = blobCounter.GetObjectsInformation();
             SimpleShapeChecker shapeChecker = new SimpleShapeChecker();
-            Graphics g = Graphics.FromImage(bmp);
-            Pen redPen = new Pen(Color.Red, 2);
+            Bitmap tmp = new Bitmap(bmp.Width, bmp.Height);
+            Graphics g = Graphics.FromImage(tmp);
+            g.DrawImage(bmp, 0, 0);
+            Pen pen = new Pen(Color.FromArgb(0, 255, 0), 2);
             foreach (Blob blob in blobs)
             {
-                List<IntPoint> edgePoints = blobCounter.GetBlobsEdgePoints(blob);
-                List<IntPoint> corners;
-                if (edgePoints.Count == 1)
+                List<IntPoint> edges = blobCounter.GetBlobsEdgePoints(blob);
+                foreach (IntPoint point in edges)
                 {
-                    continue;
+                    g.FillEllipse(Brushes.Red, point.X, point.Y, 3, 3);
                 }
-
-                if (shapeChecker.IsQuadrilateral(edgePoints, out corners))
-                {
-                    g.DrawPolygon(redPen, ToPointsArray(corners));
-                }
+                GrahamConvexHull hullFinder = new GrahamConvexHull();
+                List<IntPoint> hull = hullFinder.FindHull(edges);
+                //foreach (IntPoint point in hull)
+                //{
+                //    g.FillEllipse(Brushes.Blue, point.X, point.Y, 4, 4);
+                //}
+                g.DrawPolygon(pen, ToPointsArray(hull));
+                Debug.WriteLine(shapeChecker.CheckShapeType(edges).ToString() +
+                    ": " + edges.Count);
             }
-            Application.Run(new MainWindow(bmp));
-            redPen.Dispose();
+            Application.Run(new MainWindow(tmp));
+            pen.Dispose();
             g.Dispose();
         }
         
