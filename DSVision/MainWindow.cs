@@ -1,5 +1,6 @@
 ﻿using AForge;
 using AForge.Imaging.Filters;
+using MjpegProcessor;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,6 +18,13 @@ namespace DSVision
     public partial class MainWindow : Form
     {
         private ImageProcessor processor;
+        private MjpegDecoder mjpegDecoder;
+
+        private Timer timer;
+
+        //Hue: 130-190
+        //Sat: 70-100
+        //Lum: 40-70
 
         public MainWindow()
         {
@@ -24,7 +32,24 @@ namespace DSVision
 
             processor = new ImageProcessor();
 
-            SetBitmap(new Bitmap("Test.png"));
+            mjpegDecoder = new MjpegDecoder();
+
+            mjpegDecoder.ParseStream(new Uri("http://10.6.19.11/mjpg/video.mjpg"));
+
+            timer = new Timer();
+            timer.Tick += new EventHandler(imageUpdate);
+            timer.Interval = 500;
+            timer.Start();
+        }
+
+        private void imageUpdate(object sender, EventArgs e)
+        {
+            SetBitmap(mjpegDecoder.Bitmap);
+        }
+
+        private void frameReady(object sender, FrameReadyEventArgs e)
+        {
+            originalDisplay.Image = e.Bitmap;
         }
 
         public static Bitmap GetBitmapFromUrl(string url)
@@ -38,6 +63,7 @@ namespace DSVision
         public void SetBitmap(Bitmap bmp)
         {
             processor.Process(bmp);
+            FilterChanged();
 
             originalDisplay.Image = bmp;
             filteredDisplay.Image = processor.Filtered;

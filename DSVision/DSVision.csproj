@@ -37,15 +37,19 @@
   <ItemGroup>
     <Reference Include="AForge, Version=2.2.5.0, Culture=neutral, PublicKeyToken=c1db6ff4eaa06aeb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\AForge.NET\Framework\Release\AForge.dll</HintPath>
+      <HintPath>External\AForge.dll</HintPath>
     </Reference>
     <Reference Include="AForge.Imaging, Version=2.2.5.0, Culture=neutral, PublicKeyToken=ba8ddea9676ca48b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\AForge.NET\Framework\Release\AForge.Imaging.dll</HintPath>
+      <HintPath>External\AForge.Imaging.dll</HintPath>
     </Reference>
     <Reference Include="AForge.Math, Version=2.2.5.0, Culture=neutral, PublicKeyToken=abba2e25397ee8c9, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\AForge.NET\Framework\Release\AForge.Math.dll</HintPath>
+      <HintPath>External\AForge.Math.dll</HintPath>
+    </Reference>
+    <Reference Include="MjpegProcessor, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>External\MjpegProcessor.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -75,6 +79,13 @@
     <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="External\AForge.dll" />
+    <Content Include="External\AForge.Imaging.dll" />
+    <Content Include="External\AForge.Math.dll" />
+    <Content Include="External\AForge.Math.xml" />
+    <Content Include="External\MjpegProcessor.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
