@@ -38,7 +38,7 @@ namespace DSVision
 
             timer = new Timer();
             timer.Tick += new EventHandler(imageUpdate);
-            timer.Interval = 500;
+            timer.Interval = 200;
             timer.Start();
         }
 
