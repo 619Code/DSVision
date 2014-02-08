@@ -237,6 +237,7 @@
             this.hueMinSlider.Size = new System.Drawing.Size(205, 29);
             this.hueMinSlider.TabIndex = 12;
             this.hueMinSlider.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.hueMinSlider.Value = 130;
             this.hueMinSlider.Scroll += new System.EventHandler(this.hueMinSlider_Scroll);
             // 
             // hueMaxSlider
@@ -249,7 +250,7 @@
             this.hueMaxSlider.Size = new System.Drawing.Size(205, 29);
             this.hueMaxSlider.TabIndex = 13;
             this.hueMaxSlider.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.hueMaxSlider.Value = 360;
+            this.hueMaxSlider.Value = 190;
             this.hueMaxSlider.Scroll += new System.EventHandler(this.hueMaxSlider_Scroll);
             // 
             // satMinSlider
@@ -262,6 +263,7 @@
             this.satMinSlider.Size = new System.Drawing.Size(205, 29);
             this.satMinSlider.TabIndex = 14;
             this.satMinSlider.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.satMinSlider.Value = 70;
             this.satMinSlider.Scroll += new System.EventHandler(this.satMinSlider_Scroll);
             // 
             // satMaxSlider
@@ -287,6 +289,7 @@
             this.lumMinSlider.Size = new System.Drawing.Size(205, 29);
             this.lumMinSlider.TabIndex = 16;
             this.lumMinSlider.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.lumMinSlider.Value = 40;
             this.lumMinSlider.Scroll += new System.EventHandler(this.lumMinSlider_Scroll);
             // 
             // lumMaxSlider
@@ -299,7 +302,7 @@
             this.lumMaxSlider.Size = new System.Drawing.Size(205, 34);
             this.lumMaxSlider.TabIndex = 17;
             this.lumMaxSlider.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.lumMaxSlider.Value = 100;
+            this.lumMaxSlider.Value = 70;
             this.lumMaxSlider.Scroll += new System.EventHandler(this.lumMaxSlider_Scroll);
             // 
             // hueMinInput
@@ -315,6 +318,11 @@
             this.hueMinInput.Name = "hueMinInput";
             this.hueMinInput.Size = new System.Drawing.Size(47, 20);
             this.hueMinInput.TabIndex = 18;
+            this.hueMinInput.Value = new decimal(new int[] {
+            130,
+            0,
+            0,
+            0});
             this.hueMinInput.ValueChanged += new System.EventHandler(this.hueMinInput_ValueChanged);
             // 
             // hueMaxInput
@@ -331,7 +339,7 @@
             this.hueMaxInput.Size = new System.Drawing.Size(47, 20);
             this.hueMaxInput.TabIndex = 19;
             this.hueMaxInput.Value = new decimal(new int[] {
-            360,
+            190,
             0,
             0,
             0});
@@ -345,6 +353,11 @@
             this.satMinInput.Name = "satMinInput";
             this.satMinInput.Size = new System.Drawing.Size(47, 20);
             this.satMinInput.TabIndex = 20;
+            this.satMinInput.Value = new decimal(new int[] {
+            70,
+            0,
+            0,
+            0});
             this.satMinInput.ValueChanged += new System.EventHandler(this.satMinInput_ValueChanged);
             // 
             // satMaxInput
@@ -370,6 +383,11 @@
             this.lumMinInput.Name = "lumMinInput";
             this.lumMinInput.Size = new System.Drawing.Size(47, 20);
             this.lumMinInput.TabIndex = 22;
+            this.lumMinInput.Value = new decimal(new int[] {
+            40,
+            0,
+            0,
+            0});
             this.lumMinInput.ValueChanged += new System.EventHandler(this.lumMinInput_ValueChanged);
             // 
             // lumMaxInput
@@ -381,7 +399,7 @@
             this.lumMaxInput.Size = new System.Drawing.Size(47, 20);
             this.lumMaxInput.TabIndex = 23;
             this.lumMaxInput.Value = new decimal(new int[] {
-            100,
+            70,
             0,
             0,
             0});
@@ -395,6 +413,7 @@
             this.Controls.Add(this.mainLayout);
             this.Name = "MainWindow";
             this.Text = "MainWindow";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
             this.mainLayout.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.processedDisplay)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.originalDisplay)).EndInit();

@@ -18,13 +18,8 @@ namespace DSVision
     public partial class MainWindow : Form
     {
         private ImageProcessor processor;
-        private MjpegDecoder mjpegDecoder;
 
-        private Timer timer;
-
-        //Hue: 130-190
-        //Sat: 70-100
-        //Lum: 40-70
+        private CameraHandler camera;
 
         public MainWindow()
         {
@@ -32,24 +27,17 @@ namespace DSVision
 
             processor = new ImageProcessor();
 
-            mjpegDecoder = new MjpegDecoder();
+            //SetBitmap(new Bitmap("Test.png"));
 
-            mjpegDecoder.ParseStream(new Uri("http://10.6.19.11/mjpg/video.mjpg"));
+            camera = new CameraHandler(this);
 
-            timer = new Timer();
-            timer.Tick += new EventHandler(imageUpdate);
-            timer.Interval = 200;
-            timer.Start();
+            camera.SetStream("http://10.6.19.11/mjpg/video.mjpg");
+            camera.Start();
         }
 
-        private void imageUpdate(object sender, EventArgs e)
+        public void SetOriginal(Bitmap bmp)
         {
-            SetBitmap(mjpegDecoder.Bitmap);
-        }
-
-        private void frameReady(object sender, FrameReadyEventArgs e)
-        {
-            originalDisplay.Image = e.Bitmap;
+            originalDisplay.Image = (Bitmap)bmp.Clone();
         }
 
         public static Bitmap GetBitmapFromUrl(string url)
@@ -60,14 +48,16 @@ namespace DSVision
             return new Bitmap(responseStream);
         }
 
-        public void SetBitmap(Bitmap bmp)
+        public void SetBitmap(Bitmap bmp, bool changeOriginal = true)
         {
             processor.Process(bmp);
-            FilterChanged();
 
-            originalDisplay.Image = bmp;
-            filteredDisplay.Image = processor.Filtered;
-            processedDisplay.Image = processor.GetHullGraphic();
+            if (changeOriginal)
+            {
+                originalDisplay.Image = (Bitmap)bmp.Clone();
+            }
+
+            FilterChanged();
         }
 
         public void FilterChanged()
@@ -81,8 +71,8 @@ namespace DSVision
                 new Range((float)lumMinInput.Value / 100f, (float)lumMaxInput.Value / 100f);
 
             processor.SetFilter(filter);
-            filteredDisplay.Image = processor.Filtered;
-            processedDisplay.Image = processor.GetHullGraphic();
+            filteredDisplay.Image = (Bitmap)processor.Filtered.Clone();
+            processedDisplay.Image = (Bitmap)processor.GetHullGraphic().Clone();
         }
 
         public static int Clamp(decimal value, decimal min, decimal max)
@@ -183,6 +173,11 @@ namespace DSVision
             lumMaxSlider.Value = Clamp(lumMaxSlider.Value, lumMinInput.Value, 100);
             lumMaxInput.Value = lumMaxSlider.Value;
             FilterChanged();
+        }
+
+        private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            camera.Stop();
         }
     }
 }
