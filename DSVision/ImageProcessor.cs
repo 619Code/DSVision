@@ -31,10 +31,7 @@ namespace DSVision
         private HSLFiltering filter;
 
         private BlobCounter blobCounter;
-        private Blob[] blobs;
-
-        private List<IntPoint>[] edges;
-        public List<IntPoint>[] Hulls { private set; get; }
+        public ProcessedBlob[] Blobs { private set; get; }
 
         private Pen greenPen;
         private Pen yellowPen;
@@ -92,17 +89,40 @@ namespace DSVision
         private void processData()
         {
             blobCounter.ProcessImage(Filtered);
-            blobs = blobCounter.GetObjectsInformation();
+            Blob[] blobs = blobCounter.GetObjectsInformation();
 
-            edges = new List<IntPoint>[blobs.Length];
-            Hulls = new List<IntPoint>[blobs.Length];
+            Blobs = new ProcessedBlob[blobs.Length];
 
             for (int i = 0; i < blobs.Length; i++)
             {
-                List<IntPoint> lEdges = blobCounter.GetBlobsEdgePoints(blobs[i]);
-                edges[i] = lEdges;
+                Blob blob = blobs[i];
+                List<IntPoint> edges = blobCounter.GetBlobsEdgePoints(blob);
+                List<IntPoint> hull = hullFinder.FindHull(edges);
 
-                Hulls[i] = hullFinder.FindHull(lEdges);
+                Vector4 bounds = 
+                    new Vector4(int.MaxValue, int.MinValue, int.MaxValue, int.MinValue);
+
+                foreach (IntPoint point in hull)
+                {
+                    if (point.X > bounds.Right)
+                    {
+                        bounds.Right = point.X;
+                    }
+                    if (point.X < bounds.Left)
+                    {
+                        bounds.Left = point.X;
+                    }
+                    if (point.Y < bounds.Up) //Up and down are reversed because it is a bitmap
+                    {
+                        bounds.Up = point.Y;
+                    }
+                    if (point.Y > bounds.Down)
+                    {
+                        bounds.Down = point.Y;
+                    }
+                }
+
+                Blobs[i] = new ProcessedBlob(blob, edges, hull, bounds);
             }
         }
 
@@ -115,15 +135,15 @@ namespace DSVision
             Bitmap tmp = new Bitmap(Filtered.Width, Filtered.Height);
             Graphics g = Graphics.FromImage(tmp);
             g.DrawImage(Filtered, 0, 0);
-            for (int i = 0; i < blobs.Length; i++)
+            foreach (ProcessedBlob blob in Blobs)
             {
-                List<IntPoint> lEdges = edges[i];
-                foreach (IntPoint point in lEdges)
+                List<IntPoint> edges = blob.Edges;
+                foreach (IntPoint point in edges)
                 {
                     g.FillEllipse(redBrush, point.X, point.Y, 3, 3);
                 }
 
-                List<IntPoint> hull = Hulls[i];
+                List<IntPoint> hull = blob.Hull;
                 if (hull.Count > 2)
                 {
                     g.DrawPolygon(greenPen, ToPointsArray(hull));
@@ -134,32 +154,10 @@ namespace DSVision
                     g.FillEllipse(blueBrush, point.X, point.Y, 4, 4);
                 }
 
-                int top = int.MaxValue;
-                int bot = int.MinValue;
-                int left = int.MaxValue;
-                int right = int.MinValue;
+                Vector4 bounds = blob.Bounds;
 
-                foreach (IntPoint point in hull)
-                {
-                    if (point.X > right)
-                    {
-                        right = point.X;
-                    }
-                    if (point.X < left)
-                    {
-                        left = point.X;
-                    }
-                    if (point.Y < top) //Top and bot are reversed because it is a bitmap
-                    {
-                        top = point.Y;
-                    }
-                    if (point.Y > bot)
-                    {
-                        bot = point.Y;
-                    }
-                }
-
-                g.DrawRectangle(yellowPen, left, top, right - left, bot - top);
+                g.DrawRectangle(yellowPen, bounds.Left, bounds.Up, 
+                    bounds.Right - bounds.Left, bounds.Down - bounds.Up);
 
                 //Debug.WriteLine(shapeChecker.CheckShapeType(edges).ToString() +
                 //": " + edges.Count);
