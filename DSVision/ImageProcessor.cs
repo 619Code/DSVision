@@ -122,8 +122,92 @@ namespace DSVision
                     }
                 }
 
-                Blobs[i] = new ProcessedBlob(blob, edges, hull, bounds);
+                Blobs[i] = new ProcessedBlob(blob, edges, hull, bounds, findLines(hull));
             }
+        }
+
+        private const double AngleErrorMargin = Math.PI / 4d;
+
+        private static ApproximateLine[] findLines(List<IntPoint> points)
+        {
+            if (points.Count == 1)
+            {
+                return new ApproximateLine[0];
+            }
+
+            List<ApproximateLine> results = new List<ApproximateLine>();
+
+            ApproximateLine line = null;
+            double lineAngle = 0, newAngle, diff, distance;
+            IntPoint previous = new IntPoint(); //Essentially, initialization is null
+
+            bool quitting = false;
+
+            for(int i = 0; i < points.Count; i++)
+            {
+                IntPoint point = points[i];
+
+                if (results.Count > 0 && point == results[0].Points.Last())
+                {
+                    quitting = true;
+                }
+
+                if (line == null)
+                {
+                    line = new ApproximateLine();
+                    line.Add(point);
+                    previous = point;
+                    continue;
+                }
+
+                if (line.Points.Count == 1)
+                {
+                    lineAngle = Math.Atan2((double)point.Y - (double)previous.Y, 
+                        (double)point.X - (double)previous.X);
+                    line.Add(point);
+                }
+                else
+                {
+                    newAngle = Math.Atan2((double)point.Y - (double)previous.Y,
+                        (double)point.X - (double)previous.X);
+                    diff = Math.Min((2d * Math.PI) - Math.Abs(newAngle - lineAngle),
+                        Math.Abs(newAngle - lineAngle));
+                    if (diff > AngleErrorMargin)
+                    {
+                        results.Add(line);
+                        if (quitting)
+                        {
+                            break;
+                        }
+                        line = new ApproximateLine();
+                        line.Add(point);
+                    }
+                    else
+                    {
+                        distance = point.DistanceTo(previous);
+                        lineAngle = (lineAngle * line.Length + newAngle * distance) /
+                            (line.Length + distance);
+                        line.Add(point);
+                    }
+                }
+
+                previous = point;
+
+                if (i + 1 == points.Count)
+                {
+                    i = 0;
+                }
+            }
+
+            results.RemoveAt(0);
+
+            return results.ToArray();
+        }
+
+        private const double TwoPI = Math.PI * 2d;
+        private static double angleWrap(double angle)
+        {
+            return ((angle % TwoPI) + TwoPI) % TwoPI;
         }
 
         public Bitmap GetHullGraphic()
