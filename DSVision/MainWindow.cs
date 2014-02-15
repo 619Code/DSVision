@@ -27,6 +27,8 @@ namespace DSVision
 
             processor = new ImageProcessor();
 
+            FilterChanged();
+
             //SetBitmap(new Bitmap("Test.png"));
 
             camera = new CameraHandler(this);
@@ -54,10 +56,11 @@ namespace DSVision
 
             if (changeOriginal)
             {
-                originalDisplay.Image = (Bitmap)bmp.Clone();
+                SetOriginal(bmp);
             }
 
-            FilterChanged();
+            filteredDisplay.Image = (Bitmap)processor.Filtered.Clone();
+            processedDisplay.Image = (Bitmap)processor.GetHullGraphic().Clone();
         }
 
         public void FilterChanged()
@@ -71,8 +74,8 @@ namespace DSVision
                 new Range((float)lumMinInput.Value / 100f, (float)lumMaxInput.Value / 100f);
 
             processor.SetFilter(filter);
-            filteredDisplay.Image = (Bitmap)processor.Filtered.Clone();
-            processedDisplay.Image = (Bitmap)processor.GetHullGraphic().Clone();
+            //filteredDisplay.Image = (Bitmap)processor.Filtered.Clone();
+            //processedDisplay.Image = (Bitmap)processor.GetHullGraphic().Clone();
         }
 
         public static int Clamp(decimal value, decimal min, decimal max)

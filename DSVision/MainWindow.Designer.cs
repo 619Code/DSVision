@@ -90,8 +90,11 @@
             // 
             // processedDisplay
             // 
-            this.processedDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.processedDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.processedDisplay.Location = new System.Drawing.Point(3, 3);
+            this.processedDisplay.MaximumSize = new System.Drawing.Size(640, 480);
             this.processedDisplay.Name = "processedDisplay";
             this.processedDisplay.Size = new System.Drawing.Size(306, 215);
             this.processedDisplay.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -100,8 +103,11 @@
             // 
             // originalDisplay
             // 
-            this.originalDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.originalDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.originalDisplay.Location = new System.Drawing.Point(3, 224);
+            this.originalDisplay.MaximumSize = new System.Drawing.Size(640, 480);
             this.originalDisplay.Name = "originalDisplay";
             this.originalDisplay.Size = new System.Drawing.Size(306, 215);
             this.originalDisplay.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -110,8 +116,11 @@
             // 
             // filteredDisplay
             // 
-            this.filteredDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.filteredDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.filteredDisplay.Location = new System.Drawing.Point(315, 224);
+            this.filteredDisplay.MaximumSize = new System.Drawing.Size(640, 480);
             this.filteredDisplay.Name = "filteredDisplay";
             this.filteredDisplay.Size = new System.Drawing.Size(306, 215);
             this.filteredDisplay.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;

@@ -22,6 +22,8 @@ namespace DSVision
         //Sat: 70-100
         //Lum: 40-70
 
+        private const double AngleErrorMargin = Math.PI / 6d;
+
         private SimpleShapeChecker shapeChecker;
         private GrahamConvexHull hullFinder;
 
@@ -35,6 +37,8 @@ namespace DSVision
 
         private Pen greenPen;
         private Pen yellowPen;
+        private Pen redPen;
+        private Pen orangePen;
         private SolidBrush redBrush;
         private SolidBrush blueBrush;
 
@@ -45,8 +49,10 @@ namespace DSVision
 
             blobCounter = new BlobCounter();
 
-            greenPen = new Pen(Color.FromArgb(0, 255, 0), 2);
+            greenPen = new Pen(Color.FromArgb(0, 255, 0), 1);
             yellowPen = new Pen(Color.FromArgb(255, 255, 0), 1);
+            redPen = new Pen(Color.FromArgb(255, 0, 0), 2);
+            orangePen = new Pen(Color.FromArgb(255, 127, 0), 1);
             redBrush = new SolidBrush(Color.FromArgb(255, 0, 0));
             blueBrush = new SolidBrush(Color.FromArgb(0, 0, 255));
             filter = new HSLFiltering();
@@ -69,21 +75,31 @@ namespace DSVision
             {
                 SetFilter(newFilter);
             }
-        }
-
-        public void SetFilter(HSLFiltering newFilter)
-        {
-            filter = newFilter;
 
             if (Original == null)
             {
                 return;
             }
 
-            Filtered = new Bitmap(Original);
+            Filtered = (Bitmap)Original.Clone();
             filter.ApplyInPlace(Filtered);
 
             processData();
+        }
+
+        public void SetFilter(HSLFiltering newFilter)
+        {
+            filter = newFilter;
+
+            //if (Original == null)
+            //{
+            //    return;
+            //}
+
+            //Filtered = (Bitmap)Original.Clone();
+            //filter.ApplyInPlace(Filtered);
+
+            //processData();
         }
 
         private void processData()
@@ -126,11 +142,9 @@ namespace DSVision
             }
         }
 
-        private const double AngleErrorMargin = Math.PI / 4d;
-
         private static ApproximateLine[] findLines(List<IntPoint> points)
         {
-            if (points.Count == 1)
+            if (points.Count < 3)
             {
                 return new ApproximateLine[0];
             }
@@ -162,7 +176,7 @@ namespace DSVision
 
                 if (line.Points.Count == 1)
                 {
-                    lineAngle = Math.Atan2((double)point.Y - (double)previous.Y, 
+                    lineAngle = Math.Atan2((double)point.Y - (double)previous.Y,
                         (double)point.X - (double)previous.X);
                     line.Add(point);
                 }
@@ -221,16 +235,16 @@ namespace DSVision
             g.DrawImage(Filtered, 0, 0);
             foreach (ProcessedBlob blob in Blobs)
             {
-                List<IntPoint> edges = blob.Edges;
-                foreach (IntPoint point in edges)
-                {
-                    g.FillEllipse(redBrush, point.X, point.Y, 3, 3);
-                }
+                //List<IntPoint> edges = blob.Edges;
+                //foreach (IntPoint point in edges)
+                //{
+                //    g.FillEllipse(redBrush, point.X, point.Y, 3, 3);
+                //}
 
                 List<IntPoint> hull = blob.Hull;
                 if (hull.Count > 2)
                 {
-                    g.DrawPolygon(greenPen, ToPointsArray(hull));
+                    g.DrawPolygon(redPen, ToPointsArray(hull));
                 }
 
                 foreach (IntPoint point in hull)
@@ -243,11 +257,29 @@ namespace DSVision
                 g.DrawRectangle(yellowPen, bounds.Left, bounds.Up, 
                     bounds.Right - bounds.Left, bounds.Down - bounds.Up);
 
+                ApproximateLine[] lines = blob.Lines;
+                Debug.WriteLine(lines.Length + " lines");
+                foreach (ApproximateLine line in lines)
+                {
+                    DrawApproximateLine(g, greenPen, line);
+                }
+
                 //Debug.WriteLine(shapeChecker.CheckShapeType(edges).ToString() +
                 //": " + edges.Count);
             }
             g.Dispose();
             return tmp;
+        }
+
+        public static void DrawApproximateLine(Graphics g, Pen pen, ApproximateLine line)
+        {
+            IntPoint first = line.Points.First();
+            IntPoint last = line.Points.Last();
+
+            IntPoint diff = first - last;
+
+            g.DrawLine(pen, new System.Drawing.Point(first.X + diff.X, first.Y + diff.Y), 
+                new System.Drawing.Point(last.X - diff.X, last.Y - diff.Y));
         }
 
         public static System.Drawing.Point[] ToPointsArray(List<IntPoint> points)
