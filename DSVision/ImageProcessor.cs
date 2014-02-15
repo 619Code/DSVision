@@ -21,7 +21,7 @@ namespace DSVision
         //Sat: 70-100
         //Lum: 40-70
 
-        private const double AngleErrorMargin = Math.PI / 6d;
+        private const double AngleErrorMargin = Math.PI / 12d;
 
         private SimpleShapeChecker shapeChecker;
         private GrahamConvexHull hullFinder;
@@ -246,11 +246,6 @@ namespace DSVision
                     g.DrawPolygon(redPen, ToPointsArray(hull));
                 }
 
-                foreach (IntPoint point in hull)
-                {
-                    g.FillEllipse(blueBrush, point.X, point.Y, 4, 4);
-                }
-
                 Vector4 bounds = blob.Bounds;
 
                 g.DrawRectangle(yellowPen, bounds.Left, bounds.Up, 
@@ -261,6 +256,11 @@ namespace DSVision
                 foreach (ApproximateLine line in lines)
                 {
                     DrawApproximateLine(g, greenPen, line);
+                }
+
+                foreach (IntPoint point in hull)
+                {
+                    g.FillEllipse(blueBrush, point.X, point.Y, 4, 4);
                 }
 
                 //Debug.WriteLine(shapeChecker.CheckShapeType(edges).ToString() +
