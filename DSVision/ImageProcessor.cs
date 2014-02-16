@@ -285,15 +285,14 @@ namespace DSVision
                     DrawApproximateLine(g, greenPen, line);
                 }
 
-<<<<<<< HEAD
                 foreach (IntPoint point in hull)
                 {
                     g.FillEllipse(blueBrush, point.X, point.Y, 4, 4);
-=======
+                }
+
                 if (blob.IsQuad)
                 {
                     g.DrawPolygon(purplePen, ToPointsArray(blob.QuadPoints));
->>>>>>> Adjusted default values to new Camera
                 }
 
                 //Debug.WriteLine(shapeChecker.CheckShapeType(edges).ToString() +
