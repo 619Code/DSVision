@@ -17,9 +17,21 @@ namespace DSVision
         //0,0	43,0	47.5,2	50,6.5
 
         //Programming Room Lighting
-        //Hue: 130-190
-        //Sat: 70-100
-        //Lum: 40-70
+        //Hue: 100-160
+        //Sat: 45-100
+        //Lum: 30-70
+
+        //White Balance: Fixed Flourescent 1
+        //Exposure Control: Flicker-free 60 Hz
+        //Exposure Priority: Prioritize Image Quality
+
+        //Resolution: 640x480
+        //Compression: 50
+        //Rotate Image: 0
+        //Color Level: 100
+        //Brightness: 50
+        //Sharpness: 0
+        //Frame Rate: 10
 
         private const double AngleErrorMargin = Math.PI / 12d;
 
@@ -38,6 +50,7 @@ namespace DSVision
         private Pen yellowPen;
         private Pen redPen;
         private Pen orangePen;
+        private Pen purplePen;
         private SolidBrush redBrush;
         private SolidBrush blueBrush;
 
@@ -52,6 +65,7 @@ namespace DSVision
             yellowPen = new Pen(Color.FromArgb(255, 255, 0), 1);
             redPen = new Pen(Color.FromArgb(255, 0, 0), 2);
             orangePen = new Pen(Color.FromArgb(255, 127, 0), 1);
+            purplePen = new Pen(Color.FromArgb(102, 51, 153), 1);
             redBrush = new SolidBrush(Color.FromArgb(255, 0, 0));
             blueBrush = new SolidBrush(Color.FromArgb(0, 0, 255));
             filter = new HSLFiltering();
@@ -86,19 +100,24 @@ namespace DSVision
             processData();
         }
 
-        public void SetFilter(HSLFiltering newFilter)
+        public void SetFilter(HSLFiltering newFilter, bool process = true)
         {
             filter = newFilter;
 
-            //if (Original == null)
-            //{
-            //    return;
-            //}
+            if (!process)
+            {
+                return;
+            }
 
-            //Filtered = (Bitmap)Original.Clone();
-            //filter.ApplyInPlace(Filtered);
+            if (Original == null)
+            {
+                return;
+            }
 
-            //processData();
+            Filtered = (Bitmap)Original.Clone();
+            filter.ApplyInPlace(Filtered);
+
+            processData();
         }
 
         private void processData()
@@ -112,6 +131,14 @@ namespace DSVision
             {
                 Blob blob = blobs[i];
                 List<IntPoint> edges = blobCounter.GetBlobsEdgePoints(blob);
+
+                List<IntPoint> quadPoints = null;
+                bool isQuad = false;
+                if (edges.Count > 3)
+                {
+                    isQuad = shapeChecker.IsQuadrilateral(edges, out quadPoints);
+                }
+
                 List<IntPoint> hull = hullFinder.FindHull(edges);
 
                 Vector4 bounds = 
@@ -137,7 +164,7 @@ namespace DSVision
                     }
                 }
 
-                Blobs[i] = new ProcessedBlob(blob, edges, hull, bounds, findLines(hull));
+                Blobs[i] = new ProcessedBlob(blob, edges, hull, bounds, findLines(hull), isQuad, quadPoints);
             }
         }
 
@@ -193,6 +220,7 @@ namespace DSVision
                             break;
                         }
                         line = new ApproximateLine();
+                        line.Add(previous);
                         line.Add(point);
                     }
                     else
@@ -229,9 +257,8 @@ namespace DSVision
             {
                 return null;
             }
-            Bitmap tmp = new Bitmap(Filtered.Width, Filtered.Height);
+            Bitmap tmp = new Bitmap(Filtered);
             Graphics g = Graphics.FromImage(tmp);
-            g.DrawImage(Filtered, 0, 0);
             foreach (ProcessedBlob blob in Blobs)
             {
                 //List<IntPoint> edges = blob.Edges;
@@ -258,9 +285,15 @@ namespace DSVision
                     DrawApproximateLine(g, greenPen, line);
                 }
 
+<<<<<<< HEAD
                 foreach (IntPoint point in hull)
                 {
                     g.FillEllipse(blueBrush, point.X, point.Y, 4, 4);
+=======
+                if (blob.IsQuad)
+                {
+                    g.DrawPolygon(purplePen, ToPointsArray(blob.QuadPoints));
+>>>>>>> Adjusted default values to new Camera
                 }
 
                 //Debug.WriteLine(shapeChecker.CheckShapeType(edges).ToString() +

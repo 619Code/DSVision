@@ -246,7 +246,7 @@
             this.hueMinSlider.Size = new System.Drawing.Size(205, 29);
             this.hueMinSlider.TabIndex = 12;
             this.hueMinSlider.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.hueMinSlider.Value = 130;
+            this.hueMinSlider.Value = 100;
             this.hueMinSlider.Scroll += new System.EventHandler(this.hueMinSlider_Scroll);
             // 
             // hueMaxSlider
@@ -259,7 +259,7 @@
             this.hueMaxSlider.Size = new System.Drawing.Size(205, 29);
             this.hueMaxSlider.TabIndex = 13;
             this.hueMaxSlider.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.hueMaxSlider.Value = 190;
+            this.hueMaxSlider.Value = 160;
             this.hueMaxSlider.Scroll += new System.EventHandler(this.hueMaxSlider_Scroll);
             // 
             // satMinSlider
@@ -272,7 +272,7 @@
             this.satMinSlider.Size = new System.Drawing.Size(205, 29);
             this.satMinSlider.TabIndex = 14;
             this.satMinSlider.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.satMinSlider.Value = 70;
+            this.satMinSlider.Value = 45;
             this.satMinSlider.Scroll += new System.EventHandler(this.satMinSlider_Scroll);
             // 
             // satMaxSlider
@@ -298,7 +298,7 @@
             this.lumMinSlider.Size = new System.Drawing.Size(205, 29);
             this.lumMinSlider.TabIndex = 16;
             this.lumMinSlider.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.lumMinSlider.Value = 40;
+            this.lumMinSlider.Value = 30;
             this.lumMinSlider.Scroll += new System.EventHandler(this.lumMinSlider_Scroll);
             // 
             // lumMaxSlider
@@ -328,7 +328,7 @@
             this.hueMinInput.Size = new System.Drawing.Size(47, 20);
             this.hueMinInput.TabIndex = 18;
             this.hueMinInput.Value = new decimal(new int[] {
-            130,
+            100,
             0,
             0,
             0});
@@ -348,7 +348,7 @@
             this.hueMaxInput.Size = new System.Drawing.Size(47, 20);
             this.hueMaxInput.TabIndex = 19;
             this.hueMaxInput.Value = new decimal(new int[] {
-            190,
+            160,
             0,
             0,
             0});
@@ -363,7 +363,7 @@
             this.satMinInput.Size = new System.Drawing.Size(47, 20);
             this.satMinInput.TabIndex = 20;
             this.satMinInput.Value = new decimal(new int[] {
-            70,
+            45,
             0,
             0,
             0});
@@ -393,7 +393,7 @@
             this.lumMinInput.Size = new System.Drawing.Size(47, 20);
             this.lumMinInput.TabIndex = 22;
             this.lumMinInput.Value = new decimal(new int[] {
-            40,
+            30,
             0,
             0,
             0});

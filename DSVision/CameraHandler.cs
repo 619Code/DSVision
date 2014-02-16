@@ -17,7 +17,7 @@ namespace DSVision
         private Thread processThread;
         //private Thread originalUpdateThread;
 
-        private bool running;
+        public bool Running { get; private set; }
 
         public CameraHandler(MainWindow window)
         {
@@ -31,9 +31,9 @@ namespace DSVision
 
         public void Start()
         {
-            if (!running)
+            if (!Running)
             {
-                running = true;
+                Running = true;
                 processThread.Start();
                 //originalUpdateThread.Start();
             }
@@ -41,14 +41,14 @@ namespace DSVision
 
         public void Stop()
         {
-            running = false;
+            Running = false;
         }
 
         private void runProcessing()
         {
             Bitmap previous = null;
             Bitmap bmp;
-            while (running)
+            while (Running)
             {
                 bmp = mjpegDecoder.Bitmap;
                 if (bmp == null || bmp == previous)
@@ -68,7 +68,7 @@ namespace DSVision
         {
             Bitmap previous = null;
             Bitmap bmp;
-            while (running)
+            while (Running)
             {
                 bmp = mjpegDecoder.Bitmap;
                 if (bmp == null || bmp == previous)

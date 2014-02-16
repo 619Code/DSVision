@@ -28,7 +28,7 @@ namespace DSVision
 
             FilterChanged();
 
-            //SetBitmap(new Bitmap("Test.png"));
+            //SetBitmap(GetBitmapFromUrl("http://frc-manual.usfirst.org/upload/images/2014/1/2-5.JPG"));
 
             camera = new CameraHandler(this);
 
@@ -52,14 +52,20 @@ namespace DSVision
         public void SetBitmap(Bitmap bmp, bool changeOriginal = true)
         {
             processor.Process(bmp);
+            UpdateDisplays(changeOriginal);
+        }
 
+        public void UpdateDisplays(bool changeOriginal = true)
+        {
             if (changeOriginal)
             {
-                SetOriginal(bmp);
+                SetOriginal(processor.Original);
             }
-
-            filteredDisplay.Image = (Bitmap)processor.Filtered.Clone();
-            processedDisplay.Image = (Bitmap)processor.GetHullGraphic().Clone();
+            if (processor.Filtered != null)
+            {
+                filteredDisplay.Image = (Bitmap)processor.Filtered.Clone();
+                processedDisplay.Image = (Bitmap)processor.GetHullGraphic().Clone();
+            }
         }
 
         public void FilterChanged()
@@ -72,7 +78,17 @@ namespace DSVision
             filter.Luminance =
                 new Range((float)lumMinInput.Value / 100f, (float)lumMaxInput.Value / 100f);
 
-            processor.SetFilter(filter);
+            if (camera == null || !camera.Running)
+            {
+                processor.SetFilter(filter);
+                UpdateDisplays(false);
+            }
+            else
+            {
+                processor.SetFilter(filter, false);
+            }
+
+
             //filteredDisplay.Image = (Bitmap)processor.Filtered.Clone();
             //processedDisplay.Image = (Bitmap)processor.GetHullGraphic().Clone();
         }
