@@ -20,6 +20,8 @@ namespace DSVision
 
         private CameraHandler camera;
 
+        private HSLFiltering filter;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -51,7 +53,7 @@ namespace DSVision
 
         public void SetBitmap(Bitmap bmp, bool changeOriginal = true)
         {
-            processor.Process(bmp);
+            processor.Process(bmp, filter);
             UpdateDisplays(changeOriginal);
         }
 
@@ -70,27 +72,25 @@ namespace DSVision
 
         public void FilterChanged()
         {
-            HSLFiltering filter = new HSLFiltering();
-            filter.Hue = 
+            HSLFiltering newFilter = new HSLFiltering();
+            newFilter.Hue = 
                 new IntRange((int)hueMinInput.Value, (int)hueMaxInput.Value);
-            filter.Saturation = 
+            newFilter.Saturation = 
                 new Range((float)satMinInput.Value / 100f, (float)satMaxInput.Value / 100f);
-            filter.Luminance =
+            newFilter.Luminance =
                 new Range((float)lumMinInput.Value / 100f, (float)lumMaxInput.Value / 100f);
 
-            if (camera == null || !camera.Running)
-            {
-                processor.SetFilter(filter);
-                UpdateDisplays(false);
-            }
-            else
-            {
-                processor.SetFilter(filter, false);
-            }
+            filter = newFilter;
 
-
-            //filteredDisplay.Image = (Bitmap)processor.Filtered.Clone();
-            //processedDisplay.Image = (Bitmap)processor.GetHullGraphic().Clone();
+            //if (camera == null || !camera.Running)
+            //{
+            //    processor.SetFilter(filter);
+            //    UpdateDisplays(false);
+            //}
+            //else
+            //{
+            //    processor.SetFilter(filter, false);
+            //}
         }
 
         public static int Clamp(decimal value, decimal min, decimal max)

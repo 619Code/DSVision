@@ -60,29 +60,33 @@ namespace DSVision
                 {
                     window.SetBitmap(bmp, true);
                 }
+                if (previous != null)
+                {
+                    previous.Dispose();
+                }
                 previous = bmp;
             }
         }
 
-        public void runOriginalUpdate()
-        {
-            Bitmap previous = null;
-            Bitmap bmp;
-            while (Running)
-            {
-                bmp = mjpegDecoder.Bitmap;
-                if (bmp == null || bmp == previous)
-                {
-                    Thread.Sleep(20);
-                    continue;
-                }
-                lock (bmp)
-                {
-                    window.SetOriginal(bmp);
-                }
-                previous = bmp;
-            }
-        }
+        //public void runOriginalUpdate()
+        //{
+        //    Bitmap previous = null;
+        //    Bitmap bmp;
+        //    while (Running)
+        //    {
+        //        bmp = mjpegDecoder.Bitmap;
+        //        if (bmp == null || bmp == previous)
+        //        {
+        //            Thread.Sleep(20);
+        //            continue;
+        //        }
+        //        lock (bmp)
+        //        {
+        //            window.SetOriginal(bmp);
+        //        }
+        //        previous = bmp;
+        //    }
+        //}
 
         public void SetStream(string url)
         {
