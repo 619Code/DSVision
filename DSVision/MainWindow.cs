@@ -40,7 +40,7 @@ namespace DSVision
 
         public void SetOriginal(Bitmap bmp)
         {
-            originalDisplay.Image = (Bitmap)bmp.Clone();
+            SafelySetBitmap(originalDisplay, bmp);
         }
 
         public static Bitmap GetBitmapFromUrl(string url)
@@ -49,6 +49,16 @@ namespace DSVision
             WebResponse response = request.GetResponse();
             Stream responseStream = response.GetResponseStream();
             return new Bitmap(responseStream);
+        }
+
+        public static void SafelySetBitmap(PictureBox display, Bitmap image)
+        {
+            Bitmap previous = (Bitmap)display.Image;
+            display.Image = (Bitmap)image.Clone();
+            if (previous != null)
+            {
+                previous.Dispose();
+            }
         }
 
         public void SetBitmap(Bitmap bmp, bool changeOriginal = true)
@@ -65,8 +75,8 @@ namespace DSVision
             }
             if (processor.Filtered != null)
             {
-                filteredDisplay.Image = (Bitmap)processor.Filtered.Clone();
-                processedDisplay.Image = (Bitmap)processor.GetHullGraphic().Clone();
+                SafelySetBitmap(filteredDisplay, processor.Filtered);
+                SafelySetBitmap(processedDisplay, processor.GetHullGraphic());
             }
         }
 

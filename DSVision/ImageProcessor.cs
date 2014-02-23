@@ -86,7 +86,12 @@ namespace DSVision
                 return;
             }
 
+            Bitmap previous = Filtered;
             Filtered = (Bitmap)Original.Clone();
+            if (previous != null)
+            {
+                previous.Dispose();
+            }
 
             if (filter != null)
             {
@@ -304,10 +309,10 @@ namespace DSVision
                 g.DrawRectangle(yellowPen, bounds.Left, bounds.Up, 
                     bounds.Right - bounds.Left, bounds.Down - bounds.Up);
 
-                foreach (IntPoint point in hull)
-                {
-                    g.FillEllipse(blueBrush, point.X, point.Y, 4, 4);
-                }
+                //foreach (IntPoint point in hull)
+                //{
+                //    g.FillEllipse(blueBrush, point.X, point.Y, 4, 4);
+                //}
 
                 if (blob.IsQuad)
                 {
