@@ -48,7 +48,7 @@
             this.tableLayout.Name = "tableLayout";
             this.tableLayout.RowCount = 1;
             this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayout.Size = new System.Drawing.Size(624, 201);
+            this.tableLayout.Size = new System.Drawing.Size(944, 321);
             this.tableLayout.TabIndex = 0;
             // 
             // originalDisplay
@@ -57,7 +57,7 @@
             this.originalDisplay.Location = new System.Drawing.Point(3, 3);
             this.originalDisplay.MaximumSize = new System.Drawing.Size(640, 480);
             this.originalDisplay.Name = "originalDisplay";
-            this.originalDisplay.Size = new System.Drawing.Size(306, 195);
+            this.originalDisplay.Size = new System.Drawing.Size(466, 315);
             this.originalDisplay.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.originalDisplay.TabIndex = 0;
             this.originalDisplay.TabStop = false;
@@ -65,10 +65,10 @@
             // processedDisplay
             // 
             this.processedDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.processedDisplay.Location = new System.Drawing.Point(315, 3);
+            this.processedDisplay.Location = new System.Drawing.Point(475, 3);
             this.processedDisplay.MaximumSize = new System.Drawing.Size(640, 480);
             this.processedDisplay.Name = "processedDisplay";
-            this.processedDisplay.Size = new System.Drawing.Size(306, 195);
+            this.processedDisplay.Size = new System.Drawing.Size(466, 315);
             this.processedDisplay.TabIndex = 1;
             this.processedDisplay.TabStop = false;
             // 
@@ -76,7 +76,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(624, 201);
+            this.ClientSize = new System.Drawing.Size(944, 321);
             this.Controls.Add(this.tableLayout);
             this.Name = "FieldInterface";
             this.Text = "Field Interface";
