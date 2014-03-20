@@ -1,6 +1,6 @@
 ﻿namespace DSVision
 {
-    partial class MainWindow
+    partial class DebugDisplay
     {
         /// <summary>
         /// Required designer variable.
@@ -414,14 +414,14 @@
             0});
             this.lumMaxInput.ValueChanged += new System.EventHandler(this.lumMaxInput_ValueChanged);
             // 
-            // MainWindow
+            // DebugDisplay
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(624, 442);
             this.Controls.Add(this.mainLayout);
-            this.Name = "MainWindow";
-            this.Text = "MainWindow";
+            this.Name = "DebugDisplay";
+            this.Text = "Debug Display";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
             this.mainLayout.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.processedDisplay)).EndInit();

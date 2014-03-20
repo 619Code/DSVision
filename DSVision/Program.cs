@@ -15,7 +15,7 @@ namespace DSVision
     {
         static void Main(string[] args)
         {
-            Application.Run(new MainWindow());
+            Application.Run(new DebugDisplay());
         }
     }
 }

@@ -2,11 +2,18 @@
 using AForge.Imaging;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 
 namespace DSVision
 {
+    interface CameraDisplay
+    {
+        void UpdateOriginal(Bitmap bmp);
+        void UpdateProcessed(Bitmap bmp);
+    }
+
     class ProcessedBlob
     {
         public Blob Blob;

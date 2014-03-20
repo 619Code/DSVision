@@ -63,12 +63,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CameraHandler.cs" />
-    <Compile Include="ImageProcessor.cs" />
-    <Compile Include="MainWindow.cs">
+    <Compile Include="DSVUtilities.cs" />
+    <Compile Include="FieldInterface.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainWindow.Designer.cs">
-      <DependentUpon>MainWindow.cs</DependentUpon>
+    <Compile Include="FieldInterface.Designer.cs">
+      <DependentUpon>FieldInterface.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImageProcessor.cs" />
+    <Compile Include="DebugDisplay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DebugDisplay.Designer.cs">
+      <DependentUpon>DebugDisplay.cs</DependentUpon>
     </Compile>
     <Compile Include="DataStructures.cs" />
     <Compile Include="Program.cs" />
@@ -79,8 +86,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MainWindow.resx">
-      <DependentUpon>MainWindow.cs</DependentUpon>
+    <EmbeddedResource Include="FieldInterface.resx">
+      <DependentUpon>FieldInterface.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DebugDisplay.resx">
+      <DependentUpon>DebugDisplay.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

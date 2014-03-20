@@ -72,7 +72,7 @@ namespace DSVision
             blueBrush = new SolidBrush(Color.FromArgb(0, 0, 255));
         }
 
-        public void Process(Bitmap bmp, HSLFiltering filter = null)
+        public void Process(Bitmap bmp, HSLFiltering filter = null, Bitmap copy = null)
         {
             if (bmp == null)
             {
@@ -87,7 +87,14 @@ namespace DSVision
             }
 
             Bitmap previous = Filtered;
-            Filtered = (Bitmap)Original.Clone();
+            if (copy != null)
+            {
+                Filtered = (Bitmap)Original.Clone();
+            }
+            else
+            {
+                Filtered = copy;
+            }
             if (previous != null)
             {
                 previous.Dispose();

@@ -14,7 +14,7 @@ using System.Windows.Forms;
 
 namespace DSVision
 {
-    public partial class MainWindow : Form
+    public partial class DebugDisplay : Form, CameraDisplay
     {
         private ImageProcessor processor;
 
@@ -22,7 +22,7 @@ namespace DSVision
 
         private HSLFiltering filter;
 
-        public MainWindow()
+        public DebugDisplay()
         {
             InitializeComponent();
 
@@ -38,45 +38,35 @@ namespace DSVision
             camera.Start();
         }
 
-        public void SetOriginal(Bitmap bmp)
+        public void SetBitmap(Bitmap bmp)
         {
-            SafelySetBitmap(originalDisplay, bmp);
+            UpdateOriginal(bmp);
+            UpdateProcessed(bmp);
         }
 
-        public static Bitmap GetBitmapFromUrl(string url)
+        public void UpdateProcessed(Bitmap bmp)
         {
-            WebRequest request = WebRequest.Create(url);
-            WebResponse response = request.GetResponse();
-            Stream responseStream = response.GetResponseStream();
-            return new Bitmap(responseStream);
-        }
-
-        public static void SafelySetBitmap(PictureBox display, Bitmap image)
-        {
-            Bitmap previous = (Bitmap)display.Image;
-            display.Image = (Bitmap)image.Clone();
-            if (previous != null)
+            Bitmap clone;
+            lock (this)
             {
-                previous.Dispose();
+                clone = (Bitmap)bmp.Clone();
             }
-        }
-
-        public void SetBitmap(Bitmap bmp, bool changeOriginal = true)
-        {
-            processor.Process(bmp, filter);
-            UpdateDisplays(changeOriginal);
-        }
-
-        public void UpdateDisplays(bool changeOriginal = true)
-        {
-            if (changeOriginal)
-            {
-                SetOriginal(processor.Original);
-            }
+            processor.Process(bmp, filter, clone);
             if (processor.Filtered != null)
             {
-                SafelySetBitmap(filteredDisplay, processor.Filtered);
-                SafelySetBitmap(processedDisplay, processor.GetHullGraphic());
+                lock (this)
+                {
+                    DSVUtilities.SafelySetBitmap(filteredDisplay, processor.Filtered);
+                    DSVUtilities.SafelySetBitmap(processedDisplay, processor.GetHullGraphic());
+                }
+            }
+        }
+
+        public void UpdateOriginal(Bitmap bmp)
+        {
+            lock (this)
+            {
+                DSVUtilities.SafelySetBitmap(processedDisplay, processor.Original);
             }
         }
 

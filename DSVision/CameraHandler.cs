@@ -12,21 +12,21 @@ namespace DSVision
     {
         private MjpegDecoder mjpegDecoder;
 
-        private MainWindow window;
+        private CameraDisplay display;
 
         private Thread processThread;
-        //private Thread originalUpdateThread;
+        private Thread originalUpdateThread;
 
         public bool Running { get; private set; }
 
-        public CameraHandler(MainWindow window)
+        public CameraHandler(CameraDisplay display)
         {
-            this.window = window;
+            this.display = display;
 
             mjpegDecoder = new MjpegDecoder();
 
             processThread = new Thread(new ThreadStart(runProcessing));
-            //originalUpdateThread = new Thread(new ThreadStart(runOriginalUpdate));
+            originalUpdateThread = new Thread(new ThreadStart(runOriginalUpdate));
         }
 
         public void Start()
@@ -35,7 +35,7 @@ namespace DSVision
             {
                 Running = true;
                 processThread.Start();
-                //originalUpdateThread.Start();
+                originalUpdateThread.Start();
             }
         }
 
@@ -56,10 +56,7 @@ namespace DSVision
                     Thread.Sleep(20);
                     continue;
                 }
-                lock (bmp)
-                {
-                    window.SetBitmap(bmp, true);
-                }
+                display.UpdateProcessed(bmp);
                 if (previous != null)
                 {
                     previous.Dispose();
@@ -68,25 +65,22 @@ namespace DSVision
             }
         }
 
-        //public void runOriginalUpdate()
-        //{
-        //    Bitmap previous = null;
-        //    Bitmap bmp;
-        //    while (Running)
-        //    {
-        //        bmp = mjpegDecoder.Bitmap;
-        //        if (bmp == null || bmp == previous)
-        //        {
-        //            Thread.Sleep(20);
-        //            continue;
-        //        }
-        //        lock (bmp)
-        //        {
-        //            window.SetOriginal(bmp);
-        //        }
-        //        previous = bmp;
-        //    }
-        //}
+        private void runOriginalUpdate()
+        {
+            Bitmap previous = null;
+            Bitmap bmp;
+            while (Running)
+            {
+                bmp = mjpegDecoder.Bitmap;
+                if (bmp == null || bmp == previous)
+                {
+                    Thread.Sleep(20);
+                    continue;
+                }
+                display.UpdateOriginal(bmp);
+                previous = bmp;
+            }
+        }
 
         public void SetStream(string url)
         {
